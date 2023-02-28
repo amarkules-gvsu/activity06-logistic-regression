@@ -1,22 +1,27 @@
-Day 1 - Simple Logistic Regression
-================
+---
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+# Day 1 - Simple Logistic Regression
 
 In this repository/directory you should see two items:
 
-- `README.md` - this document.
-- `activity06.Rmd` - the file you will complete in RStudio for this
-  week.
+-   `README.md` - this document.
+-   `activity06.Rmd` - the file you will complete in RStudio for this
+    week.
 
 ## Task 1: Open the RMarkdown document
 
 Read these directions first, then work through them.
 
-- In the **Files** pane of RStudio, locate and click on the
-  `activity06.Rmd` file to open it.
-- This file is essentially a blank document with only a `title` and
-  `output` option (to produce a GitHub friendly Markdown file). You will
-  follow the tasks in this `README` file and do the work (coding,
-  responding, etc.) in RStudio.
+-   In the **Files** pane of RStudio, locate and click on the
+    `activity06.Rmd` file to open it.
+-   This file is essentially a blank document with only a `title` and
+    `output` option (to produce a GitHub friendly Markdown file). You
+    will follow the tasks in this `README` file and do the work (coding,
+    responding, etc.) in RStudio.
 
 As you work through this activity, be descriptive in your response to
 questions and even leave comments in your code to help you understand
@@ -29,19 +34,20 @@ thinking/doing?
 Again, we will use two packages from Posit (formerly
 [RStudio](https://posit.co/)): `{tidyverse}` and `{tidymodels}`.
 
-- Once you have verified that both `{tidyverse}` and `{tidymodels}` are
-  already installed (remember how to do this in the **Packages** pane?),
-  load these packages in the R chunk titled `setup`. Press Enter/Return
-  after line 7 to add more code lines, then type the following:
+-   Once you have verified that both `{tidyverse}` and `{tidymodels}`
+    are already installed (remember how to do this in the **Packages**
+    pane?), load these packages in the R chunk titled `setup`. Press
+    Enter/Return after line 7 to add more code lines, then type the
+    following:
 
-  ``` r
-  library(tidyverse)
-  library(tidymodels)
-  ```
+    ``` r
+    library(tidyverse)
+    library(tidymodels)
+    ```
 
-- Run the `setup` code chunk or **knit**
-  <img src="../README-img/knit-icon.png" alt="knit" width = "20"/> icon
-  your Rmd document to verify that no errors occur.
+-   Run the `setup` code chunk or **knit**
+    <img src="../README-img/knit-icon.png" alt="knit" width="20"/> icon
+    your Rmd document to verify that no errors occur.
 
 <!-- Since we will be looking at many relationships graphically, it will be nice to not have to code each of these individually.
 `{GGally}` is an extension to `{ggplot2}` that reduces some of the complexities when combining multiple plots.
@@ -62,7 +68,7 @@ For example, [`GGally::ggpairs`](http://ggobi.github.io/ggally/articles/ggpairs.
 -->
 
 Remember to organize your RMarkdown document using your amazing Markdown
-skills 😄
+skills :smile:
 
 ## Task 3: Load the data and
 
@@ -70,17 +76,17 @@ The data we are working with is again from the OpenIntro site. Read in
 the following **CSV** file using the URL method:
 `https://www.openintro.org/data/csv/resume.csv`
 
-- Create a new R code chunk to read in the linked CSV file.
-- Rather than downloading this file, uploading to RStudio, then reading
-  it in, explore how to load this file directly from the provided URL
-  with the appropriate `{readr}` function (remember that `{readr}` is
-  part of `{tidyverse}` so you do not need to load/`library` it
-  separately).
-- Assign this data set into a data frame named `resume`.
+-   Create a new R code chunk to read in the linked CSV file.
+-   Rather than downloading this file, uploading to RStudio, then
+    reading it in, explore how to load this file directly from the
+    provided URL with the appropriate `{readr}` function (remember that
+    `{readr}` is part of `{tidyverse}` so you do not need to
+    load/`library` it separately).
+-   Assign this data set into a data frame named `resume`.
 
 ### The data
 
-From OpenIntro’s [description of the
+From OpenIntro's [description of the
 data](https://www.openintro.org/data/index.php?data=resume):
 
 > This experiment data comes from a study that sought to understand the
@@ -90,7 +96,7 @@ data](https://www.openintro.org/data/index.php?data=resume):
 > Over this time period, the researchers randomly generating résumés to
 > go out to a job posting, such as years of experience and education
 > details, to create a realistic-looking résumé. They then randomly
-> assigned a name to the résumé that would communicate the applicant’s
+> assigned a name to the résumé that would communicate the applicant's
 > gender and race. The first names chosen for the study were selected so
 > that the names would predominantly be recognized as belonging to black
 > or white individuals. For example, Lakisha was a name that their
@@ -122,16 +128,16 @@ frame. After doing this, answer the following questions:
 | No                | 4478 |   91.95 |
 | Yes               |  392 |    8.05 |
 
-5.  Using the output from (4) and (5), what do you notice?
+1.  Using the output from (4) and (5), what do you notice?
 
 ## Task 4: Probability and odds
 
 Using your output from (4) and (5), answer the following questions:
 
-6.  What is the probability that a randomly selected résumé/person will
+1.  What is the probability that a randomly selected résumé/person will
     be called back?
 
-7.  What are the **odds** that a randomly selected résumé/person will be
+2.  What are the **odds** that a randomly selected résumé/person will be
     called back?
 
 ## Task 5: Logistic regression
@@ -143,21 +149,18 @@ variable).
 
 In our activity, $Y_i$ takes the value 1 if a résumé receives a callback
 and 0 if it did not. Generally, we will let the probability of a
-“success” (a 1) be $p_i$ and the probability of a “failure” (a 0) be
-$1 - p_i$. Therefore, the odds of a “success” are:
+"success" (a 1) be $p_i$ and the probability of a "failure" (a 0) be $1
 
-$$
-\frac{Pr(Y_i = 1)}{Pr(Y_i = 0)} = \frac{p_i}{1-p_i}
-$$
+-   p_i$. Therefore, the odds of a "success" are:
+
+$$ \\frac{Pr(Y_i = 1)}{Pr(Y_i = 0)} = \\frac{p_i}{1-p_i} $$
 
 From your reading, you saw that we use the *logit function* (or *log
 odds*) to model binary outcome variables:
 
-$$
-\begin{equation*}
-\log\left(\frac{p_i}{1-p_i}\right) = \beta_0 + \beta_1 X
-\end{equation*}
-$$
+$$ \\begin{equation\*} \\log\\left(\\frac{p_i}{1-p_i}\\right) = \\beta_0
+
+-   \\beta_1 X \\end{equation\*} $$
 
 To keep things simpler, we will first explore a logistic regression
 model with a two-level categorical explanatory variable: `race` - the
@@ -174,10 +177,10 @@ of in parentheses). Note that the values in each column add to 100%.
 
 Using the above table, answer the following question:
 
-6.  What is the probability that a randomly selected résumé/person
+1.  What is the probability that a randomly selected résumé/person
     perceived as Black will be called back?
 
-7.  What are the **odds** that a randomly selected résumé/person
+2.  What are the **odds** that a randomly selected résumé/person
     perceived as Black will be called back?
 
 This process of calculating conditional (e.g., if a résumé/person
@@ -187,41 +190,41 @@ fitting models. A similar approach could be used for linear regression
 models and you are encouraged to find out how to do this in your past
 activities.
 
-- Create a new R code chunk and type the following, then run your code
-  chunk or knit your document.
+-   Create a new R code chunk and type the following, then run your code
+    chunk or knit your document.
 
-  ``` r
-  # The {tidymodels} method for logistic regression requires that the response be a factor variable
-  resume <- resume %>% 
-    mutate(received_callback = as.factor(received_callback))
+    ``` r
+    # The {tidymodels} method for logistic regression requires that the response be a factor variable
+    resume <- resume %>% 
+      mutate(received_callback = as.factor(received_callback))
 
-  resume_mod <- logistic_reg() %>%
-    set_engine("glm") %>%
-    fit(received_callback ~ race, data = resume, family = "binomial")
+    resume_mod <- logistic_reg() %>%
+      set_engine("glm") %>%
+      fit(received_callback ~ race, data = resume, family = "binomial")
 
-  tidy(resume_mod) %>% 
-    knitr::kable(digits = 3)
-  ```
+    tidy(resume_mod) %>% 
+      knitr::kable(digits = 3)
+    ```
 
 After doing this, respond to the following questions:
 
-8.  Write the estimated regression equation. Round to 3 digits.
+1.  Write the estimated regression equation. Round to 3 digits.
 
-9.  Using your equation in (8), write the *simplified* estimated
+2.  Using your equation in (8), write the *simplified* estimated
     regression equation corresponding to résumés/persons perceived as
     Black. Round to 3 digits.
 
 Based on your model, if a randomly selected résumé/person perceived as
 Black,
 
-10. What are the log-odds that they will be called back?
+1.  What are the log-odds that they will be called back?
 
-11. What are the odds that they will be called back? How does this
+2.  What are the odds that they will be called back? How does this
     related back to your answer from (7)? *Hint*: In (9) you obtained
     the log-odds (i.e., the natural log-odds). How can you
     back-transform this value to obtain the odds?
 
-12. What is the probability that will be called back? How does this
+3.  What is the probability that will be called back? How does this
     related back to your answer from (6)? *Hint* Use the odds to
     calculate this value.
 
