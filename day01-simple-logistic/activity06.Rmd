@@ -5,4 +5,128 @@ output: github_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(tidymodels)
+
+```
+
+```{r}
+(resume = read_csv('https://www.openintro.org/data/csv/resume.csv'))
+```
+
+### Is this an observational study or an experiment? Explain.
+
+Experiment, the resumes are the same except for the names that the researchers are testing.
+
+### The variable of interest is received_callback. What type of variable is this? What do the values represent?
+
+categorical, whether the person was called back for an interview.
+
+### For received_callback, create an appropriate data visualization using {ggplot2}. Be sure to provide more descriptive labels (both axes labels and value labels - there are many ways to do this) as well as an appropriate title.
+
+```{r}
+ggplot(resume) +
+  aes(x = factor(received_callback)) +
+  geom_bar() +
+  scale_x_discrete(labels=c("No", "Yes")) +
+  labs(x="Recieved Callback?", y="Count", title = "Resume Callback Likelihood")
+```
+
+### Below, I provide you with a numerical summary table that should reiterate (i.e., provides numerical values) your plot in (3). Write the code to produce this table.
+
+```{r}
+resume %>%
+  mutate(received_callback_txt=ifelse(received_callback == 1, 'Yes', 'No')) %>%
+  group_by(received_callback_txt) %>%
+  summarize(n = n(), percent = (n()/nrow(resume)) * 100)
+```
+
+### What is the probability that a randomly selected résumé/person will be called back?
+
+8.05%
+
+### What are the odds that a randomly selected résumé/person will be called back?
+
+```{r}
+0.9195/0.0805
+```
+
+1 in 12.42236
+
+To keep things simpler, we will first explore a logistic regression model with a two-level categorical explanatory variable: `race` - the inferred race associated to the first name on the résumé. Below is a two-way table (also known as a contingency table or crosstable), where the rows are the response variable levels, the columns are the explanatory variable levels, and the cells are the percent (and number of in parentheses). Note that the values in each column add to 100%.
+
+| received_callback | Black        | White        |
+|-------------------|--------------|--------------|
+| No                | 93.55 (2278) | 90.35 (2200) |
+| Yes               | 6.45 (157)   | 9.65 (235)   |
+
+Using the above table, answer the following question:
+
+### What is the probability that a randomly selected résumé/person perceived as Black will be called back?
+
+6.45%
+
+### What are the odds that a randomly selected résumé/person perceived as Black will be called back?
+
+```{r}
+0.9355/0.0645
+```
+
+1 in 14.5
+
+```{r}
+# The {tidymodels} method for logistic regression requires that the response be a factor variable
+resume <- resume %>% 
+  mutate(received_callback = as.factor(received_callback))
+
+resume_mod <- logistic_reg() %>%
+  set_engine("glm") %>%
+  fit(received_callback ~ race, data = resume, family = "binomial")
+
+tidy(resume_mod) %>% 
+  knitr::kable(digits = 3)
+```
+
+### Write the estimated regression equation. Round to 3 digits.
+
+logit(received_callback) = -2.675 + 0.438\*racewhite
+
+### Using your equation in (8), write the simplified estimated regression equation corresponding to résumés/persons perceived as Black. Round to 3 digits.
+
+logit(received_callback) = -2.675
+
+### What are the log-odds that they will be called back?
+
+-2.675
+
+### What are the odds that they will be called back? How does this related back to your answer from (7)? Hint: In (9) you obtained the log-odds (i.e., the natural log-odds). How can you back-transform this value to obtain the odds?
+
+```{r}
+1/exp(-2.675)
+exp(-2.675)
+```
+
+odds are 1 in 14.51235 or 0.06890683
+
+### What is the probability that will be called back? How does this related back to your answer from (6)? Hint Use the odds to calculate this value.
+
+```{r}
+exp(-2.675)/(1+exp(-2.675)) * 100
+```
+
+6.44% - mat
+
+```{r}
+resume_select <- resume %>% 
+  rename(sex = gender) %>% 
+  filter(job_city == "Chicago") %>% 
+  mutate(race = case_when(
+         race == "white" ~ "White",
+         TRUE ~ "Black" 
+       ),
+       sex = case_when(
+         sex == "f" ~ "female",
+         TRUE ~ "male"
+       )) %>% 
+  select(received_callback, years_experience, race, sex)
 ```
